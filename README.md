@@ -2,7 +2,8 @@
 
 ## Practicas
 [01P](#01p)
+[02P](#02p)
 
 ### 01P <a id="01p"></a>
 
-holita
+### 02P <a id="02p"></a>
