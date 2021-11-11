@@ -22,7 +22,7 @@ CREATE TABLE Pelicula(
     titulo char NOT NULL UNIQUE,
     fechaEstreno date NOT NULL,
     duracionMin real NOT NULL CHECK (duracionMin > 0),
-    genero char NOT NULL CHECK (genero IN ('terror', 'scfi', 'aventura')),
+    genero char NOT NULL CHECK (genero IN ('Terror', 'Scifi', 'Aventura')),
     iddirector int NOT NULL,
     FOREIGN KEY (iddirector) REFERENCES Director(iddirector)
 );
