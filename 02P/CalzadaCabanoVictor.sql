@@ -9,12 +9,17 @@
 
 
 -- 1. Mostrar los datos de los pedidos realizados entre octubre y noviembre de 2018 (0.5 ptos)
+select pe.* from pedidos pe
+where pe.fechaHoraPedido between '2018-10-01' and '2018-11-30';
 
 -- 2. Devolver el id, nombre, apellido1, apellido2, fecha de alta y fecha de baja de todos los miembros 
 --    del personal que no estén de baja, ordenados descendentemente por fecha de alta y ascendentemente 
 --    por nombre (0.75 pto, 0.25 ptos adicionales si la consulta se realiza con el nombre y apellidos concatenados).
+select per.id, per.nombre | ' ' | per.apellido1 | ' ' | per.apellido2, per.fechaAlta, per.fechaBaja 
+from personal per order by per.fechaAlta desc, per.nombre asc; 
 
 -- 3. Retornar los datos de todos los clientes cuyo nombre comience por G o J y que además tengan observaciones (1 pto).
+select cl.* from clientes
 
 -- 4. Devolver el id e importe de las pizzas junto con el id y descripción de todos sus ingredientes, 
 --    siempre que el importe de estas pizzas sea mayor de 3 (1 pto).
