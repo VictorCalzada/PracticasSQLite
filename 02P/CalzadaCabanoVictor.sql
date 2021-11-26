@@ -42,11 +42,21 @@ left join Pizzas pi on bs.idbase = pi.idbase;
 
 -- 7. Retornar los datos de los pedidos realizados por el cliente con id 1, junto con los datos de sus líneas 
 --    y de las pizzas pedidas, siempre que el precio unitario en la línea sea menor que el importe base de la pizza. (1.5 ptos)
-select ped.*, liP.*, pi.* from Pedidos pe 
+
+----------- La primera consulta requiere de muchas tablas. Se puede simplificar ------------
+select pe.*, liP.*, pi.* from Pedidos pe 
 inner join Clientes cl on pe.idcliente = cl.idcliente 
 join LineasPedidos liP on pe.idpedido = liP.idpedido
 join Pizzas pi on pi.idpizza = liP.idpizza
 where cl.idcliente = 1 and liP.precioUnidad < pi.importeBase;
+
+------------ La segundo consulta elimina clientes, ya que pedidos ya almacena el idcliente --------------
+select pe.*, liP.*, pi.* from Pedidos pe 
+join LineasPedidos liP on pe.idpedido = liP.idpedido
+join Pizzas pi on pi.idpizza = liP.idpizza
+where pe.idcliente = 1 and liP.precioUnidad < pi.importeBase;
+
+
 
 -- 8. Mostrar el id y nif de todos los clientes, junto con el número total de pedidos realizados (0.75 pto, 
 --    0.25 ptos adicionales si sólo se devuelven los datos de los que hayan realizado más de un pedido).
@@ -60,7 +70,10 @@ update Pizzas set importeBase = importeBase + 0.5
 where idpizza in (select inp.* from IngredienteDePizza inp where inp.idingrediente = 'JAM');
 
 -- 10. Eliminar las líneas de los pedidos anteriores a 2018 (0.75 pto).
-delete from LineasPedidos where idpedido in (select pe.idpedido)
+delete from LineasPedidos where idpedido in (select pe.idpedido from Pedidos pe where pe.fechaHoraPedido < '2018-01-01');
 
 -- 11. BONUS para el 10: Realizar una consulta que devuelva el número de pizzas totales pedidas por cada cliente. 
 --     En la consulta deberán aparecer el id y nif de los clientes, además de su nombre y apellidos concatenados (1 pto).
+select cl.idcliente, cl.nif, cl.nombre || ' ' || cl.apellido1 || ' ' || cl.apellido2, count(*) 
+from Pedidos pe join Clientes cl on pe.idcliente = cl.idcliente
+group by cl.idcliente, cl.nif, cl.nombre, cl.apellido1, cl.apellido2;
