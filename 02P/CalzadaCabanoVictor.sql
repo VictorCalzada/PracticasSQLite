@@ -74,6 +74,11 @@ delete from LineasPedidos where idpedido in (select pe.idpedido from Pedidos pe 
 
 -- 11. BONUS para el 10: Realizar una consulta que devuelva el número de pizzas totales pedidas por cada cliente. 
 --     En la consulta deberán aparecer el id y nif de los clientes, además de su nombre y apellidos concatenados (1 pto).
-select cl.idcliente, cl.nif, cl.nombre || ' ' || cl.apellido1 || ' ' || cl.apellido2, count(*) 
-from Pedidos pe join Clientes cl on pe.idcliente = cl.idcliente
+select cl.idcliente, cl.nif, cl.nombre || ' ' || cl.apellido1 || ' ' || cl.apellido2, sum(liP.cantidad) 
+from LineasPedidos liP join Pedidos pe on liP.idpedido = pe.idpedido 
+join Clientes cl on pe.idcliente = cl.idcliente
 group by cl.idcliente, cl.nif, cl.nombre, cl.apellido1, cl.apellido2;
+
+------- En este caso muestra los pedidos realizados por los clientes. 
+------- Como hemos borrado los datos anteriores a 2018 los pedidos de los clientes 6 y 7 no aparecen
+------- El cliente 5 por otro lado no realiza ningun pedido. 
