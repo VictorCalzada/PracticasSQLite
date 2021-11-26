@@ -9,14 +9,14 @@
 
 
 -- 1. Mostrar los datos de los pedidos realizados entre octubre y noviembre de 2018 (0.5 ptos)
-select pe.* from pedidos pe
+select pe.* from Pedidos pe
 where pe.fechaHoraPedido between '2018-10-01' and '2018-11-30';
 
 -- 2. Devolver el id, nombre, apellido1, apellido2, fecha de alta y fecha de baja de todos los miembros 
 --    del personal que no estén de baja, ordenados descendentemente por fecha de alta y ascendentemente 
 --    por nombre (0.75 pto, 0.25 ptos adicionales si la consulta se realiza con el nombre y apellidos concatenados).
 select per.idPersonal, per.nombre||' '||per.apellido1||' '||per.apellido2, per.fechaAlta, per.fechaBaja 
-from personal per order by per.fechaAlta desc, per.nombre asc; 
+from Personal per order by per.fechaAlta desc, per.nombre asc; 
 
 -- 3. Retornar los datos de todos los clientes cuyo nombre comience por G o J y que además tengan observaciones (1 pto).
 select cl.* from Clientes cl 
@@ -42,13 +42,25 @@ left join Pizzas pi on bs.idbase = pi.idbase;
 
 -- 7. Retornar los datos de los pedidos realizados por el cliente con id 1, junto con los datos de sus líneas 
 --    y de las pizzas pedidas, siempre que el precio unitario en la línea sea menor que el importe base de la pizza. (1.5 ptos)
+select ped.*, liP.*, pi.* from Pedidos pe 
+inner join Clientes cl on pe.idcliente = cl.idcliente 
+join LineasPedidos liP on pe.idpedido = liP.idpedido
+join Pizzas pi on pi.idpizza = liP.idpizza
+where cl.idcliente = 1 and liP.precioUnidad < pi.importeBase;
 
 -- 8. Mostrar el id y nif de todos los clientes, junto con el número total de pedidos realizados (0.75 pto, 
 --    0.25 ptos adicionales si sólo se devuelven los datos de los que hayan realizado más de un pedido).
+select cl.idcliente, cl.nif, count(*) 
+from Pedidos pe join Clientes cl on pe.idcliente = cl.idcliente
+group by cl.idcliente, cl.nif
+having count(*) > 1; 
 
 -- 9. Sumar 0.5 al importe base de todas las pizzas que contengan el ingrediente con id ‘JAM’ (0.75 pto).
+update Pizzas set importeBase = importeBase + 0.5
+where idpizza in (select inp.* from IngredienteDePizza inp where inp.idingrediente = 'JAM');
 
 -- 10. Eliminar las líneas de los pedidos anteriores a 2018 (0.75 pto).
+delete from LineasPedidos where idpedido in (select pe.idpedido)
 
 -- 11. BONUS para el 10: Realizar una consulta que devuelva el número de pizzas totales pedidas por cada cliente. 
 --     En la consulta deberán aparecer el id y nif de los clientes, además de su nombre y apellidos concatenados (1 pto).
